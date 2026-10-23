@@ -1,0 +1,6 @@
+# CID-10 — um código por linha (sem ponto).
+M545
+M541
+G442
+K802
+H358
