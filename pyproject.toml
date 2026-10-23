@@ -1,0 +1,26 @@
+[project]
+name = "tiss-ocr"
+version = "0.1.0"
+description = "Leitura de guias médicas em PDF ou imagem com extração estruturada"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "B", "UP", "SIM", "RUF", "I"]
+ignore = [
+    "E501",    # comprimento de linha é tratado pelo formatador
+    "B008",    # Depends/File no default é o idioma do FastAPI
+    "UP042",   # str+Enum é intencional: serializa como string no Pydantic
+    "RUF001",  # o gerador sintético imita caracteres do portal real
+    "RUF012",  # anotação ClassVar não se aplica aos dataclasses daqui
+]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/*" = ["T201"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

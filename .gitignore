@@ -1,0 +1,24 @@
+venv/
+__pycache__/
+*.pyc
+.env
+.idea/
+.vscode/
+
+node_modules/
+web/dist/
+
+var/
+DATASET/
+DOC_TESTE/
+results_*.json
+
+# cache de treino: refeito por scripts/build_cell_dataset.py
+data/cells.npz
+
+*.pdf
+*.jpg
+*.jpeg
+*.png
+
+!web/public/*.svg
