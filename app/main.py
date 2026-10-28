@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.api.routes import router, store
+from app.api.routes import public_router, router, store
 from app.api.security import require_access, warn_if_open
 from app.extraction.template_reader import CharacterModelMissing, load_classifier
 from app.recognition.catalogues import register_official_tables
@@ -63,6 +63,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(public_router)
 app.include_router(router, dependencies=[Depends(require_access)])
 
 if WEB_BUILD.exists():

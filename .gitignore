@@ -22,3 +22,5 @@ data/cells.npz
 *.png
 
 !web/public/*.svg
+# gabarito do formulário: precisa ser o mesmo em todo ambiente
+!models/blank_form.png

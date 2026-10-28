@@ -28,6 +28,9 @@ from app.output.tiss_xml import to_xml
 from app.schemas.guide import ExtractedField, FieldSource
 
 router = APIRouter(prefix="/api")
+# O healthcheck do container não tem credencial: fica fora da proteção, e não
+# devolve nada além do estado do serviço.
+public_router = APIRouter(prefix="/api")
 store = ExtractionStore()
 
 PREVIEW_DPI = 110
@@ -38,7 +41,7 @@ def _now() -> str:
     return datetime.now().isoformat(timespec="seconds")
 
 
-@router.get("/health")
+@public_router.get("/health")
 def health() -> dict[str, object]:
     settings = get_settings()
     return {

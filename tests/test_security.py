@@ -15,14 +15,18 @@ def protected(monkeypatch):
 
 
 def test_without_credentials_the_service_refuses(protected):
-    resposta = protected.get("/api/health")
+    resposta = protected.get("/api/extractions")
 
     assert resposta.status_code == 401
     assert "Basic" in resposta.headers["WWW-Authenticate"]
 
 
+def test_health_stays_open_for_the_container_healthcheck(protected):
+    assert protected.get("/api/health").status_code == 200
+
+
 def test_wrong_password_is_refused(protected):
-    assert protected.get("/api/health", auth=("atendente", "errada")).status_code == 401
+    assert protected.get("/api/extractions", auth=("atendente", "errada")).status_code == 401
 
 
 def test_right_credentials_pass(protected):

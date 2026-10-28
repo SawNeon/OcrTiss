@@ -72,8 +72,21 @@ def load_classifier(path: str = str(DEFAULT_MODEL_PATH)) -> CharacterClassifier:
     return CharacterClassifier.load(model_path)
 
 
+TEMPLATE_IMAGE = Path("models/blank_form.png")
+
+
 @lru_cache(maxsize=1)
 def _template() -> np.ndarray:
+    """O gabarito em branco contra o qual a página é alinhada.
+
+    Vai no repositório como imagem para que todo ambiente use exatamente o
+    mesmo que o classificador conheceu no treino — e para não depender de
+    fontes instaladas no servidor.
+    """
+    if TEMPLATE_IMAGE.exists():
+        imagem = cv2.imread(str(TEMPLATE_IMAGE), cv2.IMREAD_COLOR)
+        if imagem is not None:
+            return imagem
     return cv2.cvtColor(np.array(blank_form_image()), cv2.COLOR_RGB2BGR)
 
 

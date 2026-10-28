@@ -6,7 +6,32 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-FONT_DIR = Path(r"C:\Windows\Fonts")
+FONT_DIRS = (
+    Path(r"C:\Windows\Fonts"),
+    Path("/usr/share/fonts/truetype/dejavu"),
+    Path("/usr/share/fonts/truetype"),
+    Path("/usr/share/fonts"),
+)
+
+# Fora do Windows as fontes da Microsoft não existem; a DejaVu cobre o papel da
+# Arial para desenhar os rótulos do formulário.
+FALLBACKS = ("arial.ttf", "DejaVuSans.ttf", "LiberationSans-Regular.ttf")
+BOLD_FALLBACKS = ("arialbd.ttf", "DejaVuSans-Bold.ttf", "LiberationSans-Bold.ttf")
+
+
+def find_font(*candidates: str) -> Path | None:
+    """Primeira fonte existente entre as candidatas, procurando em todo diretório conhecido."""
+    for name in candidates:
+        for folder in FONT_DIRS:
+            caminho = folder / name
+            if caminho.exists():
+                return caminho
+        for folder in FONT_DIRS:
+            if folder.exists():
+                achados = sorted(folder.rglob(name))
+                if achados:
+                    return achados[0]
+    return None
 
 
 class HandStyle(str, Enum):
@@ -45,10 +70,10 @@ STYLE_SIZE_FACTOR: dict[HandStyle, float] = {
 
 
 def load_font(style: HandStyle, size: int, rng: random.Random) -> ImageFont.FreeTypeFont:
-    candidates = [FONT_DIR / name for name in STYLE_FONTS[style]]
-    available = [path for path in candidates if path.exists()]
+    available = [caminho for caminho in (find_font(name) for name in STYLE_FONTS[style]) if caminho]
     if not available:
-        return ImageFont.truetype(str(FONT_DIR / "arial.ttf"), size)
+        regular = find_font(*FALLBACKS)
+        return ImageFont.truetype(str(regular), size) if regular else ImageFont.load_default(size)
     chosen = rng.choice(available)
     return ImageFont.truetype(str(chosen), int(size * STYLE_SIZE_FACTOR[style]))
 
