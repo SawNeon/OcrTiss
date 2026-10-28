@@ -1,0 +1,21 @@
+services:
+  tiss-ocr:
+    build: .
+    image: tiss-ocr:latest
+    container_name: tiss-ocr
+    restart: unless-stopped
+    env_file: .env
+    # Só o nginx alcança o serviço: nada exposto direto na internet.
+    ports:
+      - "127.0.0.1:8077:8000"
+    volumes:
+      - tiss-var:/app/var
+    # A VPS é compartilhada: este limite protege o outro serviço de um pico aqui.
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+          cpus: "1.5"
+
+volumes:
+  tiss-var:

@@ -63,7 +63,7 @@ class TemplateReading:
 
 
 @lru_cache(maxsize=1)
-def _classifier(path: str = str(DEFAULT_MODEL_PATH)) -> CharacterClassifier:
+def load_classifier(path: str = str(DEFAULT_MODEL_PATH)) -> CharacterClassifier:
     model_path = Path(path)
     if not model_path.exists():
         raise CharacterModelMissing(
@@ -139,7 +139,7 @@ def read_coded_fields(
 ) -> TemplateReading:
     """Reads every character box of the aligned page with the local classifier."""
     settings = settings or get_settings()
-    classifier = _classifier()
+    classifier = load_classifier()
 
     page = aligned_cells(pdf_path, page_number, settings.render_dpi)
     if page.score < MIN_TEMPLATE_SCORE:
