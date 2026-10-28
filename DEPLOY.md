@@ -111,3 +111,8 @@ Isto é um ambiente de demonstração. Para produção faltam: autenticação po
 usuário em vez de senha única, fila para processar fora da requisição, banco
 de dados no lugar do armazenamento em memória das extrações, backup do volume
 e monitoramento.
+
+O serviço roda com **um worker** por causa desse armazenamento em memória: com
+dois processos, metade das correções bateria no worker que não conhece a
+extração. Atender mais de um atendente em paralelo depende de mover esse
+estado para o banco — o cadastro e o histórico já estão lá.
